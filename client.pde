@@ -71,4 +71,11 @@ void clientEvent(Client c) {
 }
 
 
-
+void handleMessage(String message) {
+  if (message.startsWith("YourID:")) {
+    clientId = int(message.substring(7));
+    println("Assigned ID from server: " + clientId);
+  } else {
+    println("Unknown message from server: " + message);
+  }
+}
