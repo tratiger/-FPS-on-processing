@@ -1,6 +1,7 @@
 //クライアント
 import processing.net.*;
 Client client;
+int clientId;
 String passwordInput = "";
 String serverResponseY = "";
 String serverResponseN ="";
