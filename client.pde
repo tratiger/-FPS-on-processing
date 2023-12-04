@@ -26,6 +26,8 @@ fill(0);
 text(passwordInput,205,50);
 
 // サーバーからのレスポンスを表示
+  textSize(10);
+  text("clientId: " + clientId ,10,10);
   textSize(23);
   text(serverResponseN, 60, 100);
   fill(255, 0, 0);
@@ -51,12 +53,20 @@ void clientEvent(Client c) {
      String s = c.readString();
      if (s != null){
        println("client received: " + s);
-       if (s.equals("success")){
-         serverResponseY = s;
+        // サーバーからのメッセージがクライアントIDを含んでいる場合、分割して利用
+       if (s.indexOf(':') != -1) {
+         String[] parts = split(s, ':');
+         int senderId = int(parts[0]);
+         String senderMessage = parts[1];
+        // println("Received from client " + senderId + ": " + senderMessage);
+    
+       if (senderMessage.equals("success")){
+         serverResponseY = senderMessage;
        }
        else{
          serverResponseN = "failure";
      }
+       }
    }
 }
 

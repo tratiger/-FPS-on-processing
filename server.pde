@@ -17,7 +17,13 @@ void draw(){
         println("Received from client " + clientId + ": " + message);
         broadcastMessage(clientId + ":" + message);
       }
-    } else {
+      if(message.equals("otamesi1234")){
+        server.write("success");
+      }else{
+        server.write("パスワードが間違っています");
+      }
+    }
+    else {
       println("Client disconnected: " + currentClient.ip());
       clients.remove(i);
     }
