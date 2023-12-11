@@ -10,7 +10,7 @@ float gunAngleX, gunAngleY; //AK47のローテ角度
 
 float playerX, playerY, playerZ;
 float playerAngleX, playerAngleY;
-int[][][] mapData = new int[100][15][100];
+int[][][] mapData //= new int[100][15][100];
 float reach = 200;
 
 void setup() {
@@ -18,8 +18,9 @@ void setup() {
   size(1000, 600, P3D);
   client = new Client(this,"10.240.97.140",20000);
   //127.0.0.1で自分のPCのIP
-  generateMapData();
-  generateTree();
+
+ // generateMapData();
+//  generateTree();
  
    // プレイヤーの初期位置と視点角度を設定  //ここ大切！！
   playerX = 160;
@@ -77,7 +78,7 @@ if (keyPressed) {
   } else if (key == ' ') {
     playerY -= 15;
   } 
-  
+
   //ブロック破壊と設置
   contlorBlock();
   
@@ -125,36 +126,36 @@ void showText3d(String str1) {
 }
 
 
-void generateMapData() {
-  for (int i = 0; i < 100; i++) {
-    for (int j = 0; j < 15; j++) {
-      for (int k = 0; k < 100; k++) {
-        if (j>=12 && j <=15){
-          mapData[i][j][k] = 1;
-        }else if (j >= 10 && j <= 11) {
-          // 地形の起伏を設定
-          mapData[i][j][k] = int(random(2));
-        } else if (j== 9 && i % 4 == 0 && k % 4 == 0 && random(1) < 0.2) {
-          // 木の生成
-            mapData[i][j][k] = 2; 
-        }
-          else {
-          // 空気ブロック
-          mapData[i][j][k] = 0;
-        }
-      }
-    } }}
+//void generateMapData() {
+ // for (int i = 0; i < 100; i++) {
+ //   for (int j = 0; j < 15; j++) {
+ //     for (int k = 0; k < 100; k++) {
+ //       if (j>=12 && j <=15){
+ //         mapData[i][j][k] = 1;
+ //       }else if (j >= 10 && j <= 11) {
+ //         // 地形の起伏を設定
+ //         mapData[i][j][k] = int(random(2));
+ //       } else if (j== 9 && i % 4 == 0 && k % 4 == 0 && random(1) < 0.2) {
+ //         // 木の生成
+ //           mapData[i][j][k] = 2; 
+ //       }
+ //         else {
+ //         // 空気ブロック
+  //        mapData[i][j][k] = 0;
+ //       }
+ //     }
+ //   } }}
 
-void generateTree(){
-  for (int i = 0; i < 100; i++) {
-    for (int j = 0; j < 15; j++) {
-      for (int k = 0; k < 100; k++) {
-        if(mapData[i][9][k]==2 && i%4==0 && k%4==0 && j<=9 && j>=4){
-             mapData[i][j][k]=2;      // 木の幹
-        }//if (j<=6 & mapData[i][9][k]==2){
+//void generateTree(){
+ // for (int i = 0; i < 100; i++) {
+  //  for (int j = 0; j < 15; j++) {
+  //    for (int k = 0; k < 100; k++) {
+  //      if(mapData[i][9][k]==2 && i%4==0 && k%4==0 && j<=9 && j>=4){
+  //           mapData[i][j][k]=2;      // 木の幹
+  //      }//if (j<=6 & mapData[i][9][k]==2){
           //  mapData[i][j][k] = 3; // 木の葉
         //  }
-      }}}}
+  //    }}}}
 
 void drawMap() {
   int blockSize = 30;
@@ -195,7 +196,14 @@ void drawMap() {
 //サーバーからのレスポンスを受信
 void clientEvent(Client c){
   String s = c.readStringUntil('\n');
-  if(s != null){
+  int s_length = s.length();
+  //mapdataの受信
+  if (s_length > 100){
+    println("ワールドを生成中");
+    [][][]mapData = receivedArray(receivedData);
+  }
+  //他プレーヤーの位置情報の受信
+  else if (s != null){
     println("client received: " + s);
     String[] ss = splitTokens(s);
     float x = float(ss[0]);
@@ -211,6 +219,24 @@ void clientEvent(Client c){
   }
 }
 
+int [][][] receivedArray(String data){
+  String[] val = split(data, ',');
+  int size1 = 100;
+  int size2 = 15;
+  int size3 = 100;
+  int[][][] resultArray = new int[size1][size2][size3];
+  int ind = 0;
+  for (int i = 0; i < size1; i++) {
+    for (int j = 0; j < size2; j++) {
+      for (int k = 0; k < size3; k++) {
+        resultArray[i][j][k] = int(val[ind]);
+        ind++;
+      }
+    }
+  }
+  
+  return resultArray;
+}
 
 
 
