@@ -209,7 +209,7 @@ void clientEvent(Client c){
     float x = float(ss[0]);
     float y = float(ss[1]);
     float z = float(ss[2]);
-    mapData = receivedArray(ss[3])
+    mapData = receivedArray(ss[3]);
  //他プレーヤーの表示
   push();
   translate(x,y,z);
