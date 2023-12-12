@@ -21,8 +21,8 @@ void setup(){
   generateTree();
   //マップデータ送信 
   // マップデータを文字列に変換
-  String dataString = mapDataToString(mapData);
-  server.write(dataString);
+  //String dataString = mapDataToString(mapData);
+  //server.write(dataString);
 
   playerX = 160;
   playerY = 150;
@@ -34,6 +34,9 @@ void setup(){
   ak47Texture = loadImage("AK47 UV Map.png");  // テクスチャをロード
   
 }
+
+// マップデータを文字列に変換
+  String dataString = mapDataToString(mapData);
 
 void draw(){
   background(200);
@@ -117,7 +120,7 @@ void draw(){
 String preplayerX = Float.toString(playerX);
 String preplayerY = Float.toString(playerY);
 String preplayerZ = Float.toString(playerZ);
-server.write(preplayerX+" "+preplayerY+" "+preplayerZ + '\n');
+server.write(preplayerX+" "+preplayerY+" "+preplayerZ +" "+ dataString+'\n');
 
     //現在地の表示
 println("現在地 X= "+ playerX + ", Y= " + playerY , "Z=" + playerZ);

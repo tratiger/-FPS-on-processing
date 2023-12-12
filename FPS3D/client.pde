@@ -10,7 +10,7 @@ float gunAngleX, gunAngleY; //AK47のローテ角度
 
 float playerX, playerY, playerZ;
 float playerAngleX, playerAngleY;
-int[][][] mapData //= new int[100][15][100];
+int[][][] mapData = new int[100][15][100];
 float reach = 200;
 
 void setup() {
@@ -196,19 +196,20 @@ void drawMap() {
 //サーバーからのレスポンスを受信
 void clientEvent(Client c){
   String s = c.readStringUntil('\n');
-  int s_length = s.length();
+  //int s_length = s.length();
   //mapdataの受信
-  if (s_length > 100){
-    println("ワールドを生成中");
-    [][][]mapData = receivedArray(receivedData);
-  }
+  //if (s_length > 100){
+  //  println("ワールドを生成中");
+   // mapData = receivedArray(s);
+  
   //他プレーヤーの位置情報の受信
-  else if (s != null){
+  if (s != null){
     println("client received: " + s);
     String[] ss = splitTokens(s);
     float x = float(ss[0]);
     float y = float(ss[1]);
     float z = float(ss[2]);
+    mapData = receivedArray(ss[3])
  //他プレーヤーの表示
   push();
   translate(x,y,z);
