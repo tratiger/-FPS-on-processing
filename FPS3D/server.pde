@@ -14,7 +14,7 @@ int[][][] mapData = new int[100][15][100];
 float reach = 200;
 
 int dx,dy,dz,cx,cy,cz;
-int inex;
+int index;
 
 void setup(){
   frameRate (60);
