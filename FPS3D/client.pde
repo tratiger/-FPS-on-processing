@@ -14,6 +14,7 @@ int[][][] mapData = new int[100][15][100];
 float reach = 200;
 
 int dx,dy,dz,cx,cy,cz;
+int index;
 
 
 void setup() {
@@ -35,6 +36,7 @@ void setup() {
   ak47 = loadShape("AK47.obj");  // AK47の3Dモデルをロード
   ak47Texture = loadImage("AK47 UV Map.png");  // テクスチャをロード
   
+  index = 1;
 }
 
 void draw() {
@@ -62,7 +64,7 @@ void draw() {
 noCursor();
 
 // クロスヘアの描画
-  showText3d("+");
+  showText3d1("+");
   
 //キャラクター操作
 if (keyPressed) {
@@ -80,7 +82,29 @@ if (keyPressed) {
     playerZ += sin(playerAngleY + HALF_PI) * 5;
   } else if (key == ' ') {
     playerY -= 15;
-  } 
+  } else if (key == 'q'){
+    //銃の表示
+ push();
+  translate(playerX,playerY,playerZ);
+  rotateZ(playerAngleX);rotateY(-playerAngleY);
+  translate(width/2 - 160,height/2-150,125);
+  rotateX(PI/2); 
+  shape(ak47);  // 3Dモデルを描画
+  ak47.setTexture(ak47Texture);  // テクスチャを適用
+ pop();
+  } else if (key == '1'){
+  index = 1;
+  showText3d2("soil");
+  } else if (key == '2'){
+    index = 2;
+    showText3d2("wood");
+  } else if (key == '3'){
+    index = 3;
+    showText3d2("reaf");
+  }else if (key == '4'){
+    index = 4;
+    showText3d2("rock");
+  }
 
   //ブロック破壊と設置
   contlorBlock();
@@ -90,21 +114,12 @@ if (keyPressed) {
  gunX=playerX-160; gunY=playerY-150; gunZ=playerZ+125;
  gunAngleX=playerAngleX-0.08539816; gunAngleY=playerAngleY;
  
- //銃の表示
- push();
-  translate(playerX,playerY,playerZ);
-  rotateZ(playerAngleX);rotateY(-playerAngleY);
-  translate(width/2 - 160,height/2-150,125);
-  rotateX(PI/2); 
-  shape(ak47);  // 3Dモデルを描画
-  ak47.setTexture(ak47Texture);  // テクスチャを適用
- pop();
 
 //サーバーに位置情報の送信
 String preplayerX = Float.toString(playerX);
 String preplayerY = Float.toString(playerY);
 String preplayerZ = Float.toString(playerZ);
-client.write(preplayerX+" "+preplayerY+" "+preplayerZ + " "+ dx + " "+ dy +" "+dz+" "+cx+" "+cy+" "+cz+'\n');
+client.write(preplayerX+" "+preplayerY+" "+preplayerZ + " "+ dx + " "+ dy +" "+dz+" "+cx+" "+cy+" "+cz+" "+index+'\n');
 
  //現在地の表示
 println("現在地 X= "+ playerX + ", Y= " + playerY , "Z=" + playerZ);
@@ -115,7 +130,7 @@ println("角度　playerAngleX=" + playerAngleX, "playerAngleY=" + playerAngleY)
 
 
 
-void showText3d(String str1) {
+void showText3d1(String str1) {
   pushMatrix();
   camera();
   hint(DISABLE_DEPTH_TEST);
@@ -124,6 +139,19 @@ void showText3d(String str1) {
   fill(0);
   textSize(40);
   text(str1, width / 2, height / 2);
+  hint(ENABLE_DEPTH_TEST);
+  popMatrix();
+}
+
+void showText3d2(String str2){
+  pushMatrix();
+  camera();
+  hint(DISABLE_DEPTH_TEST);
+  noLights();
+  textMode(MODEL);
+  fill(0);
+  textSize(40);
+  text(str1,500 ,500 );
   hint(ENABLE_DEPTH_TEST);
   popMatrix();
 }
@@ -187,6 +215,9 @@ void drawMap() {
         } else if (mapData[i][j][k] == 3) {
           fill(50, 205, 50);
           box(30, 30, 30); // 木の葉ブロック
+        } else if (mapData[i][j][k] == 4){
+          fill(150);
+          box(30,30,30); //石ブロック
         }
         popMatrix();
       }
@@ -218,6 +249,7 @@ void clientEvent(Client c){
     int ccx = int(ss[6]);
     int ccy = int(ss[7]);
     int ccz = int(ss[8]);
+    int id = int(ss[9]);
 
    // mapData = receivedArray(ss[3]);
  //他プレーヤーの表示
@@ -233,7 +265,7 @@ void clientEvent(Client c){
       mapData[ddz][ddy][ddx]=0;
     //}
    // if(ccx != null){
-      mapData[ccz][ccy][ccx]=1;
+      mapData[ccz][ccy][ccx]=id;
    // }
   }
 }
@@ -281,8 +313,8 @@ void contlorBlock() {
         }}
         if(key=='e'){
         if(mapData[z][y][x] == 0 ) {
-          if(mapData[z+1][y][x]==1 || mapData[z-1][y][x]==1 || mapData[z][y+1][x]==1 ||mapData[z][y-1][x]==1 || mapData[z][y][x+1]==1 || mapData[z][y][x-1]==1){
-          mapData[z][y][x] = 1; // ブロックを生成 ここにスロットから選択する機能入れる!!
+          if(mapData[z+1][y][x]!=0 || mapData[z-1][y][x]!=0 || mapData[z][y+1][x]!=0 ||mapData[z][y-1][x]!=0 || mapData[z][y][x+1]!=0 || mapData[z][y][x-1]!=0){
+          mapData[z][y][x] = index; // ブロックを生成 ここにスロットから選択する機能入れる!!
           cz=z; cy=y; cx=x;
           break;
         }}}
