@@ -15,6 +15,7 @@ float reach = 200;
 
 int dx,dy,dz,cx,cy,cz;
 int index;
+int k;
 
 void setup(){
   frameRate (60);
@@ -36,7 +37,7 @@ void setup(){
   ak47 = loadShape("AK47.obj");  // AK47の3Dモデルをロード
   ak47Texture = loadImage("AK47 UV Map.png");  // テクスチャをロード
   
-  index = 1;
+  index = 1; k=1;
 }
 
 // マップデータを文字列に変換
@@ -84,15 +85,7 @@ void draw(){
   } else if (key == ' ') {
     playerY -= 15;
   } else if (key == 'q'){
-    //銃の表示
- push();
-  translate(playerX,playerY,playerZ);
-  rotateZ(playerAngleX);rotateY(-playerAngleY);
-  translate(width/2 - 160,height/2-150,125);
-  rotateX(PI/2); 
-  shape(ak47);  // 3Dモデルを描画
-  ak47.setTexture(ak47Texture);  // テクスチャを適用
- pop();
+    k=1-k;
   } else if (key == '1'){
   index = 1;
   showText3d2("soil");
@@ -109,6 +102,18 @@ void draw(){
 
   contlorBlock();
 
+  }
+
+  if(k==1){
+    //銃の表示
+ push();
+  translate(playerX,playerY,playerZ);
+  rotateZ(playerAngleX);rotateY(-playerAngleY);
+  translate(width/2 - 160,height/2-150,125);
+  rotateX(PI/2); 
+  shape(ak47);  // 3Dモデルを描画
+  ak47.setTexture(ak47Texture);  // テクスチャを適用
+ pop();
   }
 
   gunX=playerX-160; gunY=playerY-150; gunZ=playerZ+125;
@@ -185,7 +190,7 @@ void showText3d2(String str2){
   hint(DISABLE_DEPTH_TEST);
   noLights();
   textMode(MODEL);
-  fill(0);
+  fill(255);
   textSize(40);
   text(str2,500 ,500 );
   hint(ENABLE_DEPTH_TEST);
