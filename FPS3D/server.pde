@@ -47,24 +47,26 @@ void draw(){
 
   drawMap();
 
+  // マウスの移動量を取得
+  float mouseXDelta = -radians(mouseX - pmouseX)*0.3;
+  float mouseYDelta = -radians(mouseY - pmouseY)*0.3;
+
+  // プレイヤーの向きを更新
+  playerAngleY -= mouseXDelta;
+  playerAngleX = constrain(playerAngleX - mouseYDelta, -PI / 2.0, PI / 2.0);
+
   camera(playerX, playerY, playerZ,
          playerX + cos(playerAngleY) * cos(playerAngleX),
          playerY + sin(playerAngleX),
          playerZ + sin(playerAngleY) * cos(playerAngleX),
          0, 1, 0);
 
+  noCursor();
+
   showText3d("+");
 
   if (keyPressed) {
-  if (keyCode == UP) {
-    playerAngleX -= 0.1;
-  } else if (keyCode == DOWN) {
-    playerAngleX += 0.1;
-  } else if (keyCode == LEFT) {
-    playerAngleY -= 0.1;
-  } else if (keyCode == RIGHT) {
-    playerAngleY += 0.1;
-  } else if (keyCode ==  SHIFT){
+  if (keyCode ==  SHIFT){
     playerY += 15;
   } else if (key == 'w') {
     playerX += cos(playerAngleY) * 5;

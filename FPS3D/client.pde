@@ -44,6 +44,14 @@ void draw() {
     // プレイヤーの視点周辺のブロックなどを描画する  最適化処理入れる！！
  drawMap();
 
+  // マウスの移動量を取得
+  float mouseXDelta = -radians(mouseX - pmouseX)*0.3;
+  float mouseYDelta = -radians(mouseY - pmouseY)*0.3;
+
+  // プレイヤーの向きを更新
+  playerAngleY -= mouseXDelta;
+  playerAngleX = constrain(playerAngleX - mouseYDelta, -PI / 2.0, PI / 2.0);
+
   // カメラの位置と方向を設定
   camera(playerX, playerY, playerZ,
          playerX + cos(playerAngleY) * cos(playerAngleX),
@@ -51,22 +59,14 @@ void draw() {
          playerZ + sin(playerAngleY) * cos(playerAngleX),
          0, 1, 0);
 
+noCursor();
+
 // クロスヘアの描画
   showText3d("+");
   
 //キャラクター操作
 if (keyPressed) {
-  if (keyCode == UP) {
-    playerAngleX -= 0.1;
-  } else if (keyCode == DOWN) {
-    playerAngleX += 0.1;
-  } else if (keyCode == LEFT) {
-    playerAngleY -= 0.1;
-  } else if (keyCode == RIGHT) {
-    playerAngleY += 0.1;
-  } else if (keyCode ==  SHIFT){
-    playerY += 15;
-  } else if (key == 'w') {
+  if (key == 'w') {
     playerX += cos(playerAngleY) * 5;
     playerZ += sin(playerAngleY) * 5;
   } else if (key == 's' ){
