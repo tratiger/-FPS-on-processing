@@ -125,12 +125,12 @@ void draw(){
    pop();
 
    //ブロック生成の変更
-    if(ddx != null){
+    //if(ddx != null){
       mapData[ddz][ddy][ddx]=0;
-    }
-    if(ccx != null){
+   // }
+    //if(ccx != null){
       mapData[ccz][ccy][ccx]=1;
-    }
+   // }
         }
     }
 
