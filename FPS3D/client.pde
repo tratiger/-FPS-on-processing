@@ -13,14 +13,17 @@ float playerAngleX, playerAngleY;
 int[][][] mapData = new int[100][15][100];
 float reach = 200;
 
+int dx,dy,dz,cx,cy,cz;
+
+
 void setup() {
   frameRate (60);
   size(1000, 600, P3D);
   client = new Client(this,"10.240.97.140",20000);
   //127.0.0.1で自分のPCのIP
 
- // generateMapData();
-//  generateTree();
+  generateMapData();
+  generateTree();
  
    // プレイヤーの初期位置と視点角度を設定  //ここ大切！！
   playerX = 160;
@@ -101,7 +104,7 @@ if (keyPressed) {
 String preplayerX = Float.toString(playerX);
 String preplayerY = Float.toString(playerY);
 String preplayerZ = Float.toString(playerZ);
-client.write(preplayerX+" "+preplayerY+" "+preplayerZ + '\n');
+client.write(preplayerX+" "+preplayerY+" "+preplayerZ + " "+ dx + " "+ dy +" "+dz+" "+cx+" "+cy+" "+cz+'\n');
 
  //現在地の表示
 println("現在地 X= "+ playerX + ", Y= " + playerY , "Z=" + playerZ);
@@ -126,36 +129,36 @@ void showText3d(String str1) {
 }
 
 
-//void generateMapData() {
- // for (int i = 0; i < 100; i++) {
- //   for (int j = 0; j < 15; j++) {
- //     for (int k = 0; k < 100; k++) {
- //       if (j>=12 && j <=15){
- //         mapData[i][j][k] = 1;
- //       }else if (j >= 10 && j <= 11) {
- //         // 地形の起伏を設定
- //         mapData[i][j][k] = int(random(2));
- //       } else if (j== 9 && i % 4 == 0 && k % 4 == 0 && random(1) < 0.2) {
- //         // 木の生成
- //           mapData[i][j][k] = 2; 
- //       }
- //         else {
- //         // 空気ブロック
-  //        mapData[i][j][k] = 0;
- //       }
- //     }
- //   } }}
+void generateMapData() {
+ for (int i = 0; i < 100; i++) {
+    for (int j = 0; j < 15; j++) {
+      for (int k = 0; k < 100; k++) {
+        if (j>=12 && j <=15){
+          mapData[i][j][k] = 1;
+        }else if (j >= 10 && j <= 11) {
+          // 地形の起伏を設定
+          mapData[i][j][k] =1 ; //int(random(2));
+        } else if (j== 9 && i % 4 == 0 && k % 4 == 0 && random(1) < 0.2) {
+          // 木の生成
+            mapData[i][j][k] = 2; 
+        }
+          else {
+          // 空気ブロック
+          mapData[i][j][k] = 0;
+        }
+      }
+    } }}
 
-//void generateTree(){
- // for (int i = 0; i < 100; i++) {
-  //  for (int j = 0; j < 15; j++) {
-  //    for (int k = 0; k < 100; k++) {
-  //      if(mapData[i][9][k]==2 && i%4==0 && k%4==0 && j<=9 && j>=4){
-  //           mapData[i][j][k]=2;      // 木の幹
-  //      }//if (j<=6 & mapData[i][9][k]==2){
+void generateTree(){
+  for (int i = 0; i < 100; i++) {
+    for (int j = 0; j < 15; j++) {
+      for (int k = 0; k < 100; k++) {
+        if(mapData[i][9][k]==2 && i%4==0 && k%4==0 && j<=9 && j>=4){
+             mapData[i][j][k]=2;      // 木の幹
+        }//if (j<=6 & mapData[i][9][k]==2){
           //  mapData[i][j][k] = 3; // 木の葉
         //  }
-  //    }}}}
+     }}}}
 
 void drawMap() {
   int blockSize = 30;
@@ -209,7 +212,14 @@ void clientEvent(Client c){
     float x = float(ss[0]);
     float y = float(ss[1]);
     float z = float(ss[2]);
-    mapData = receivedArray(ss[3]);
+    int ddx = int(ss[3]);
+    int ddy = int(ss[4]);
+    int ddz = int(ss[5]);
+    int ccx = int(ss[6]);
+    int ccy = int(ss[7]);
+    int ccz = int(ss[8]);
+
+   // mapData = receivedArray(ss[3]);
  //他プレーヤーの表示
   push();
   translate(x,y,z);
@@ -217,6 +227,14 @@ void clientEvent(Client c){
   sphere(40);
   x=0; y=0;z=0;
   pop();
+
+  //ブロック生成の変更
+    if(ddx != null){
+      mapData[ddz][ddy][ddx]=0;
+    }
+    if(ccx != null){
+      mapData[ccz][ccy][ccx]=1;
+    }
   }
 }
 
@@ -258,13 +276,16 @@ void contlorBlock() {
         if (key == 'f'){
         if (mapData[z][y][x] >0) {
           mapData[z][y][x] = 0; // ブロックを破壊
+          dz=z; dy=y; dx=x;
           break;
         }}
         if(key=='e'){
-        if(mapData[z][y][x] == 0) {
+        if(mapData[z][y][x] == 0 ) {
+          if(mapData[z+1][y][x]==1 || mapData[z-1][y][x]==1 || mapData[z][y+1][x]==1 ||mapData[z][y-1][x]==1 || mapData[z][y][x+1]==1 || mapData[z][y][x-1]==1){
           mapData[z][y][x] = 1; // ブロックを生成 ここにスロットから選択する機能入れる!!
+          cz=z; cy=y; cx=x;
           break;
-        }}
+        }}}
     }
   }
 }}
