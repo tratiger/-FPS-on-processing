@@ -187,7 +187,7 @@ void showText3d2(String str2){
   textMode(MODEL);
   fill(0);
   textSize(40);
-  text(str1,500 ,500 );
+  text(str2,500 ,500 );
   hint(ENABLE_DEPTH_TEST);
   popMatrix();
 }
