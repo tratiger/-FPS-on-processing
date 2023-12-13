@@ -301,16 +301,3 @@ void contlorBlock() {
 
 
 
-String mapDataToString(int[][][] arr) {
-  // マップデータを文字列に変換する処理
-  StringBuilder t = new StringBuilder();
-  for (int i = 0; i < arr.length; i++) {
-    for (int j = 0; j < arr[i].length; j++) {
-      for (int k = 0; k < arr[i][j].length; k++) {
-        t.append(arr[i][j][k]);
-        t.append(",");
-      }
-    }
-  }
-  return t.toString();
-}

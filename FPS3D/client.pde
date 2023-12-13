@@ -274,24 +274,7 @@ void clientEvent(Client c){
   }
 }
 
-int [][][] receivedArray(String data){
-  String[] val = split(data, ',');
-  int size1 = 100;
-  int size2 = 15;
-  int size3 = 100;
-  int[][][] resultArray = new int[size1][size2][size3];
-  int ind = 0;
-  for (int i = 0; i < size1; i++) {
-    for (int j = 0; j < size2; j++) {
-      for (int k = 0; k < size3; k++) {
-        resultArray[i][j][k] = int(val[ind]);
-        ind++;
-      }
-    }
-  }
-  
-  return resultArray;
-}
+
 
 
 
