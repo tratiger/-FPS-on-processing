@@ -21,7 +21,7 @@ int k;
 void setup() {
   frameRate (60);
   size(1000, 600, P3D);
-  client = new Client(this,"10.240.97.140",20000);
+  client = new Client(this,"127.0.0.1",20000);
   //127.0.0.1で自分のPCのIP
 
   generateMapData();
