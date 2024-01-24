@@ -1,5 +1,8 @@
 //オンラインマルチ　FPS　3D
 //鯖側
+
+//ジャンプ機能を追加しました
+
 import processing.net.*;
 Server server;
 
@@ -17,6 +20,9 @@ int dx,dy,dz,cx,cy,cz;
 int index;
 int k;
 
+float vy=-100;
+float g=0.2;
+
 void setup(){
   frameRate (60);
   size(1000, 600, P3D);
@@ -29,7 +35,7 @@ void setup(){
   //server.write(dataString);
 
   playerX = 160;
-  playerY = 150;
+  playerY = 225;
   playerZ = -125;
   playerAngleX = 0.08539816; // 仰角の初期値
   playerAngleY = 0;      // 方向角の初期値
@@ -57,6 +63,16 @@ void draw(){
   playerAngleY -= mouseXDelta;
   playerAngleX = constrain(playerAngleX - mouseYDelta, -PI / 2.0, PI / 2.0);
 
+ //重力の実装
+   if(playerY <225){
+    vy = vy + 30*g;
+    playerY = playerY + vy * g;
+  }
+  if(playerY>225){
+    playerY =225;
+    vy=-100;
+  }
+
   camera(playerX, playerY, playerZ,
          playerX + cos(playerAngleY) * cos(playerAngleX),
          playerY + sin(playerAngleX),
@@ -83,7 +99,7 @@ void draw(){
     playerX += cos(playerAngleY + HALF_PI) * 5;
     playerZ += sin(playerAngleY + HALF_PI) * 5;
   } else if (key == ' ') {
-    playerY -= 15;
+    playerY = 224;
   } else if (key == 'q'){
     k=1-k;
   } else if (key == '1'){
@@ -109,14 +125,14 @@ void draw(){
  push();
   translate(playerX,playerY,playerZ);
   rotateZ(playerAngleX);rotateY(-playerAngleY);
-  translate(width/2 - 160,height/2-150,125);
+  translate(width/2 - 160,height/2-225,125);
   rotateX(PI/2); 
   shape(ak47);  // 3Dモデルを描画
   ak47.setTexture(ak47Texture);  // テクスチャを適用
  pop();
   }
 
-  gunX=playerX-160; gunY=playerY-150; gunZ=playerZ+125;
+  gunX=playerX-160; gunY=playerY-225; gunZ=playerZ+125;
  gunAngleX=playerAngleX-0.08539816; gunAngleY=playerAngleY;
  
  

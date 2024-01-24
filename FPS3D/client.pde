@@ -1,5 +1,8 @@
 //オンラインマルチ　FPS　3D
 //クライアント側
+
+//ジャンプ機能を実装しました
+
 import processing.net.*;
 Client client;
 
@@ -16,6 +19,10 @@ float reach = 200;
 int dx,dy,dz,cx,cy,cz;
 int index;
 int k;
+
+float vy=-100;
+float g=0.2;
+}
 
 
 void setup() {
@@ -54,6 +61,16 @@ void draw() {
   playerAngleY -= mouseXDelta;
   playerAngleX = constrain(playerAngleX - mouseYDelta, -PI / 2.0, PI / 2.0);
 
+ //重力の実装
+   if(playerY <225){
+    vy = vy + 30*g;
+    playerY = playerY + vy * g;
+  }
+  if(playerY>225){
+    playerY =225;
+    vy=-100;
+  }
+
   // カメラの位置と方向を設定
   camera(playerX, playerY, playerZ,
          playerX + cos(playerAngleY) * cos(playerAngleX),
@@ -81,7 +98,7 @@ if (keyPressed) {
     playerX += cos(playerAngleY + HALF_PI) * 5;
     playerZ += sin(playerAngleY + HALF_PI) * 5;
   } else if (key == ' ') {
-    playerY -= 15;
+    playerY = 224;
   } else if (key == 'q'){
     k=1-k;
   } else if (key == '1'){
